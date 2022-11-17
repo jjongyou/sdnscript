@@ -1,0 +1,229 @@
+# NOTE: Type enumerator for Nodes
+#   0 : switches
+#   1 : end nodes (hosts)
+# NOTE: The 'ip' field has different semantics up to the node type.
+#       IP of swiches will be used for remote switch management, while
+#       IP of end nodes will be used for flow rule generation (ip routing).
+
+Nodes: 
+-   type: 0  
+    name: fl 
+    dpid: 0x0000000000000002
+    links:
+    -   name: ll_fl
+        port: 0
+    -   name: l0 
+        port: 1 
+    -   name: l1
+        port: 2
+    -   name: l4 
+        port: 3 
+    ip: "10.0.0.102"
+    dbip: "192.168.0.4"
+
+-   type: 0  
+    name: fr
+    dpid: 0x0000000000000003
+    links:
+    -   name: ll_fr
+        port: 0
+    -   name: l0
+        port: 1 
+    -   name: l3
+        port: 2
+    -   name: l7 
+        port: 3 
+    ip: "10.0.0.103"
+    dbip: "192.168.0.5"
+
+-   type: 0  
+    name: rl
+    dpid: 0x0000000000000004
+    links:
+    -   name: ll_rl
+        port: 0
+    -   name: l2
+        port: 1 
+    -   name: l1
+        port: 2
+    -   name: l5
+        port: 3 
+    ip: "10.0.0.104"
+    dbip: "192.168.0.11"
+
+-   type: 0  
+    name: rr
+    dpid: 0x0000000000000005
+    links:
+    -   name: ll_rr
+        port: 0
+    -   name: l2 
+        port: 1 
+    -   name: l3 
+        port: 2
+    -   name: l6
+        port: 3 
+    ip: "10.0.0.105"
+    dbip: "192.168.0.12"
+
+-   type: 0  
+    name: vcom
+    dpid: 0x0000000000000001
+    links:
+    -   name: ll_vcom
+        port: 0
+    -   name: l4
+        port: 1 
+    -   name: l7
+        port: 2
+    -   name: l5
+        port: 3 
+    -   name: l6
+        port: 4 
+    ip: "10.0.0.100"
+    dbip: "192.168.0.7"
+
+-   type: 1
+    name: vhfl 
+    dpid: 0 
+    links:
+    -   name: ll_fl
+        port: 0
+    ip: "10.0.0.102"
+    dbip: ""
+
+-   type: 1
+    name: vhfr
+    dpid: 0 
+    links:
+    -   name: ll_fr 
+        port: 0
+    ip: "10.0.0.103"
+    dbip: ""
+
+-   type: 1
+    name: vhrl
+    dpid: 0 
+    links:
+    -   name: ll_rl
+        port: 0
+    ip: "10.0.0.104"
+    dbip: ""
+
+-   type: 1
+    name: vhrr 
+    dpid: 0 
+    links:
+    -   name: ll_rr 
+        port: 0
+    ip: "10.0.0.105"
+    dbip: ""
+
+-   type: 1
+    name: vhvcom 
+    dpid: 0 
+    links:
+    -   name: ll_vcom 
+        port: 0
+    ip: "10.0.0.100"
+    dbip: ""
+
+# NOTE: As each link is bi-directional, each link descriptor will generate a pair of link objects.
+#       The generated link object with opposite direction will have the "_b" suffix in the name.
+#       e.g., name: l0 --> name: l0_b 
+# NOTE: Type enumerator for Links
+#   0 : physical links 
+#   1 : virtual links  
+
+Links:
+-   type: 0
+    name: l0
+    from: fl 
+    to: fr 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l1
+    from: fl
+    to: rl 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l2
+    from: rl
+    to: rr 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l3
+    from: fr
+    to: rr 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l4
+    from: fl
+    to: vcom 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l5
+    from: rl
+    to: vcom 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l6
+    from: rr
+    to: vcom 
+    bandwidth: 100
+    latency: 0
+
+-   type: 0
+    name: l7
+    from: fr
+    to: vcom 
+    bandwidth: 100
+    latency: 0
+
+    # Virtual links to each virtual hosts in the switch
+-   type: 1
+    name: ll_fl
+    from: fl 
+    to: vhfl 
+    bandwidth: 1000
+    latency: 0
+
+-   type: 1
+    name: ll_fr 
+    from: fr
+    to: vhfr 
+    bandwidth: 1000
+    latency: 0
+
+-   type: 1
+    name: ll_rl
+    from: rl
+    to: vhrl
+    bandwidth: 1000
+    latency: 0
+
+-   type: 1
+    name: ll_rr 
+    from: rr
+    to: vhrr 
+    bandwidth: 1000
+    latency: 0
+
+-   type: 1
+    name: ll_vcom 
+    from: vcom 
+    to: vhvcom 
+    bandwidth: 1000
+    latency: 0
